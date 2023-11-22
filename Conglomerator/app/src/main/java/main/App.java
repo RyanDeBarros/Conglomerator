@@ -78,10 +78,10 @@ public class App extends Application {
 		for (ImageSelector selector : selectors) {
 			ImageElement element = new ImageElement();
 			element.image = new Image(App.class.getResource(selector.imageFile.getCanonicalPath()).toExternalForm());
-			element.x = selector.spinX.getValue();
-			element.y = selector.spinY.getValue();
-			element.w = selector.spinW.getValue();
-			element.h = selector.spinH.getValue();
+			element.x = ImageSelector.valueOf(selector.x);
+			element.y = ImageSelector.valueOf(selector.y);
+			element.w = ImageSelector.valueOf(selector.w);
+			element.h = ImageSelector.valueOf(selector.h);
 			elements.add(element);
 		}
 		return elements;

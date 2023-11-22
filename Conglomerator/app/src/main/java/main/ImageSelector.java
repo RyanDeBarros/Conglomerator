@@ -5,7 +5,7 @@ import java.io.IOException;
 import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.Spinner;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -21,15 +21,15 @@ public class ImageSelector extends Parent {
 	private final Button fileChooserBtn = new Button("Open image");
 	private final Text fileName = new Text("...");
 	public File imageFile;
-	public final Spinner<Integer> spinX = new Spinner<>(), spinY = new Spinner<>(), spinW = new Spinner<>(), spinH = new Spinner<>();
-	private final Spinner spins[] = {spinX, spinY, spinW, spinH};
+	public final TextField x = new TextField(), y = new TextField(), w = new TextField(), h = new TextField();
+	private final TextField fields[] = {x, y, w, h};
 	private final Button cancelButton = new Button("Remove");
 
 	public ImageSelector(Stage stage, App app, double width, double height, Color c) throws IOException {
 		super();
 		bkg = new Rectangle(width, height, c);
 		getChildren().addAll(bkg, fileChooserBtn, fileName, cancelButton);
-		getChildren().addAll(spins);
+		getChildren().addAll(fields);
 
 		fileChooserBtn.setLayoutY(height * 0.05);
 		fileChooserBtn.setLayoutX(fileChooserBtn.getLayoutY());
@@ -38,13 +38,18 @@ public class ImageSelector extends Parent {
 		fileName.setFont(Font.font("Times New Roman", 16));
 		fileName.setLayoutY(fileChooserBtn.getLayoutY());
 		fileName.setLayoutX(fileChooserBtn.getLayoutX() + 0.23 * width);
-		spinX.setLayoutX(width * 0.2);
-		spinY.setLayoutX(width * 0.4);
-		spinW.setLayoutX(width * 0.6);
-		spinH.setLayoutX(width * 0.8);
-		for (Spinner spin : spins) {
+		x.setLayoutX(width * 0.2);
+		y.setLayoutX(width * 0.4);
+		w.setLayoutX(width * 0.6);
+		h.setLayoutX(width * 0.8);
+		x.setPromptText("X pos");
+		y.setPromptText("Y pos");
+		w.setPromptText("Width");
+		h.setPromptText("Height");
+		for (TextField spin : fields) {
 			spin.setPrefSize(width * 0.15, height * 0.3);
 			spin.setLayoutY(height * 0.5);
+			spin.setEditable(true);
 		}
 
 		fileChooser.setInitialDirectory(STARTING_DIRECTORY);
@@ -57,9 +62,18 @@ public class ImageSelector extends Parent {
 		});
 
 		cancelButton.setLayoutX(0.85 * width);
+		cancelButton.setLayoutY(fileChooserBtn.getLayoutY());
 		cancelButton.setOnAction(a -> {
 			app.removeSelector(this);
 		});
+	}
+
+	public static int valueOf(TextField field) {
+		try {
+			return Integer.parseInt(field.getText());
+		} catch (NumberFormatException e) {
+			return 0;
+		}
 	}
 
 }
