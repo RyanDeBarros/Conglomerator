@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -28,6 +29,8 @@ public class ImageSelector extends Parent {
 	public ImageSelector(Stage stage, App app, double width, double height, Color c) throws IOException {
 		super();
 		bkg = new Rectangle(width, height, c);
+		bkg.setStroke(Color.BLACK);
+		bkg.setStrokeType(StrokeType.INSIDE);
 		getChildren().addAll(bkg, fileChooserBtn, fileName, cancelButton);
 		getChildren().addAll(fields);
 

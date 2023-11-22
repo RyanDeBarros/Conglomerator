@@ -33,11 +33,11 @@ public class App extends Application {
 	public void start(Stage stage) {
 		root.getChildren().add(scrP);
 
-		scrP.setPrefSize(500, 600);
+		scrP.setPrefSize(600, 600);
 		scrP.setLayoutX(100);
 		Button b = new Button("Add image");
 		selectorHeight = 80;
-		b.setOnAction(a -> addSelector(stage, 500, Color.SILVER));
+		b.setOnAction(a -> addSelector(stage, 599, Color.SILVER));
 		b.setPrefSize(80, 50);
 		b.setLayoutX(10);
 		b.setLayoutY(10);
@@ -46,6 +46,7 @@ public class App extends Application {
 
 		stage.setScene(new Scene(root));
 		stage.setTitle("Conglomerator");
+		stage.setResizable(false);
 		stage.show();
 	}
 
