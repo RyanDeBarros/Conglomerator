@@ -58,6 +58,8 @@ public class ImageSelector extends Parent {
 			if (select != null) {
 				imageFile = select;
 				fileName.setText(imageFile.getParentFile().getParentFile().getName() + "/" + imageFile.getParentFile().getName() + "/" + imageFile.getName());
+//				fileChooser.setInitialFileName(imageFile.getAbsolutePath());
+				fileChooser.setInitialFileName(imageFile.getParent());
 			}
 			valid.setVisible(valid());
 			invalid.setVisible(!valid());

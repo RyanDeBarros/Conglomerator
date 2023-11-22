@@ -88,8 +88,8 @@ public class App extends Application {
 			if (elements.isEmpty()) {
 				return;
 			}
-			Image img = process(elements);
-			Preview preview = new Preview(img);
+			WritableImage img = process(elements);
+			Preview preview = new Preview(stage, img);
 			preview.initOwner(stage);
 			preview.initModality(Modality.APPLICATION_MODAL);
 			preview.showAndWait();
