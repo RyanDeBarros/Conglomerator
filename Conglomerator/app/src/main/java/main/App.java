@@ -35,14 +35,21 @@ public class App extends Application {
 
 		scrP.setPrefSize(600, 600);
 		scrP.setLayoutX(100);
-		Button b = new Button("Add image");
+		Button add = new Button("Add image");
 		selectorHeight = 80;
-		b.setOnAction(a -> addSelector(stage, 599, Color.SILVER));
-		b.setPrefSize(80, 50);
-		b.setLayoutX(10);
-		b.setLayoutY(10);
-		root.getChildren().add(b);
+		add.setOnAction(a -> addSelector(stage, 599, Color.SILVER));
+		add.setPrefSize(80, 50);
+		add.setLayoutX(10);
+		add.setLayoutY(10);
+		root.getChildren().add(add);
 		STARTING_DIRECTORY = (new DirectoryChooser()).showDialog(stage);
+
+		Button preview = new Button("Preview");
+		preview.setPrefSize(80, 50);
+		preview.setLayoutX(10);
+		preview.setLayoutY(70);
+		preview.setOnAction(a -> preview());
+		root.getChildren().add(preview);
 
 		stage.setScene(new Scene(root));
 		stage.setTitle("Conglomerator");
@@ -74,16 +81,22 @@ public class App extends Application {
 		}
 	}
 
+	private void preview() {
+
+	}
+
 	private static ArrayList<ImageElement> transfer(ArrayList<ImageSelector> selectors) throws IOException {
 		ArrayList<ImageElement> elements = new ArrayList<>();
 		for (ImageSelector selector : selectors) {
-			ImageElement element = new ImageElement();
-			element.image = new Image(App.class.getResource(selector.imageFile.getCanonicalPath()).toExternalForm());
-			element.x = ImageSelector.valueOf(selector.x);
-			element.y = ImageSelector.valueOf(selector.y);
-			element.w = ImageSelector.valueOf(selector.w);
-			element.h = ImageSelector.valueOf(selector.h);
-			elements.add(element);
+			if (selector.valid()) {
+				ImageElement element = new ImageElement();
+				element.image = new Image(App.class.getResource(selector.imageFile.getCanonicalPath()).toExternalForm());
+				element.x = ImageSelector.valueOf(selector.x);
+				element.y = ImageSelector.valueOf(selector.y);
+				element.w = ImageSelector.valueOf(selector.w);
+				element.h = ImageSelector.valueOf(selector.h);
+				elements.add(element);
+			}
 		}
 		return elements;
 	}
