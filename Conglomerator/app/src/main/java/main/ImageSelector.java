@@ -23,17 +23,17 @@ public class ImageSelector extends Parent {
 	private final Text fileName = new Text("...");
 	public File imageFile;
 	public final TextField x = new TextField(), y = new TextField();
-	private final Button cancelButton = new Button("Remove");
+	private final Button removeButton = new Button("Remove");
 
 	private final Text valid = new Text("\u2714"), invalid = new Text("\u2717");
-	private File openAt = new File(STARTING_DIRECTORY.getAbsolutePath());
+	private File openAt = STARTING_DIRECTORY;
 
 	public ImageSelector(Stage stage, App app, double width, double height, Color c) throws IOException {
 		super();
 		bkg = new Rectangle(width, height, c);
 		bkg.setStroke(Color.BLACK);
 		bkg.setStrokeType(StrokeType.INSIDE);
-		getChildren().addAll(bkg, fileChooserBtn, fileName, cancelButton, x, y);
+		getChildren().addAll(bkg, fileChooserBtn, fileName, removeButton, x, y);
 
 		fileChooserBtn.setLayoutY(height * 0.05);
 		fileChooserBtn.setLayoutX(fileChooserBtn.getLayoutY());
@@ -66,9 +66,9 @@ public class ImageSelector extends Parent {
 			invalid.setVisible(!valid());
 		});
 
-		cancelButton.setLayoutX(0.85 * width);
-		cancelButton.setLayoutY(fileChooserBtn.getLayoutY());
-		cancelButton.setOnAction(a -> {
+		removeButton.setLayoutX(width - 80);
+		removeButton.setLayoutY(fileChooserBtn.getLayoutY());
+		removeButton.setOnAction(a -> {
 			app.removeSelector(this);
 		});
 

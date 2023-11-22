@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
@@ -21,7 +22,7 @@ public class App extends Application {
 
 	private final ArrayList<ImageSelector> selectors = new ArrayList<>();
 	private final Pane root = new Pane();
-	private final Pane scroll = new Pane();
+	private final FlowPane scroll = new FlowPane();
 	private final ScrollPane scrP = new ScrollPane(scroll);
 	public static File STARTING_DIRECTORY;
 	private int selectorHeight;
@@ -34,11 +35,15 @@ public class App extends Application {
 	public void start(Stage stage) {
 		root.getChildren().add(scrP);
 
-		scrP.setPrefSize(600, 600);
+		scrP.setPrefSize(400, 600);
+		stage.widthProperty().addListener((obs, oldV, newV) -> scrP.setPrefWidth(newV.doubleValue() - 120));
+		scroll.setHgap(10);
+		root.setMinSize(600, 600);
+
 		scrP.setLayoutX(100);
 		Button add = new Button("Add image");
 		selectorHeight = 80;
-		add.setOnAction(a -> addSelector(stage, 599, Color.SILVER));
+		add.setOnAction(a -> addSelector(stage, 399, Color.SILVER));
 		add.setPrefSize(80, 50);
 		add.setLayoutX(10);
 		add.setLayoutY(10);
@@ -54,7 +59,6 @@ public class App extends Application {
 
 		stage.setScene(new Scene(root));
 		stage.setTitle("Conglomerator");
-		stage.setResizable(false);
 		stage.show();
 	}
 
@@ -63,7 +67,7 @@ public class App extends Application {
 			ImageSelector selector = new ImageSelector(stage, this, width, selectorHeight, c);
 			scroll.getChildren().add(selector);
 			selectors.add(selector);
-			positionSelectors(selectors.size() - 1);
+//			positionSelectors(selectors.size() - 1);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
