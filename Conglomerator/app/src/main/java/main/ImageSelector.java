@@ -99,7 +99,11 @@ public class ImageSelector extends Parent {
 				&& !x.getText().isEmpty()
 				&& !y.getText().isEmpty()
 				&& !w.getText().isEmpty()
-				&& !h.getText().isEmpty();
+				&& !h.getText().isEmpty()
+				&& valueOf(x) >= 0
+				&& valueOf(y) >= 0
+				&& valueOf(w) >= 0
+				&& valueOf(h) >= 0;
 	}
 
 	public static int valueOf(TextField field) {

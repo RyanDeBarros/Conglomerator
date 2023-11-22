@@ -14,6 +14,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -48,7 +49,7 @@ public class App extends Application {
 		preview.setPrefSize(80, 50);
 		preview.setLayoutX(10);
 		preview.setLayoutY(70);
-		preview.setOnAction(a -> preview());
+		preview.setOnAction(a -> preview(stage));
 		root.getChildren().add(preview);
 
 		stage.setScene(new Scene(root));
@@ -61,8 +62,8 @@ public class App extends Application {
 		try {
 			ImageSelector selector = new ImageSelector(stage, this, width, selectorHeight, c);
 			scroll.getChildren().add(selector);
-			selector.setLayoutY(selectors.size() * (selectorHeight + 10));
 			selectors.add(selector);
+			positionSelectors(selectors.size() - 1);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
@@ -81,8 +82,20 @@ public class App extends Application {
 		}
 	}
 
-	private void preview() {
-
+	private void preview(Stage stage) {
+		try {
+			ArrayList<ImageElement> elements = transfer(selectors);
+			if (elements.isEmpty()) {
+				return;
+			}
+			Image img = process(elements);
+			Preview preview = new Preview(img);
+			preview.initOwner(stage);
+			preview.initModality(Modality.APPLICATION_MODAL);
+			preview.showAndWait();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	private static ArrayList<ImageElement> transfer(ArrayList<ImageSelector> selectors) throws IOException {
@@ -90,7 +103,7 @@ public class App extends Application {
 		for (ImageSelector selector : selectors) {
 			if (selector.valid()) {
 				ImageElement element = new ImageElement();
-				element.image = new Image(App.class.getResource(selector.imageFile.getCanonicalPath()).toExternalForm());
+				element.image = new Image(selector.imageFile.getCanonicalPath());
 				element.x = ImageSelector.valueOf(selector.x);
 				element.y = ImageSelector.valueOf(selector.y);
 				element.w = ImageSelector.valueOf(selector.w);
@@ -104,6 +117,11 @@ public class App extends Application {
 	private static WritableImage process(ArrayList<ImageElement> imageElements) {
 		WritableImage wi = new WritableImage(width(imageElements), height(imageElements));
 		PixelWriter pw = wi.getPixelWriter();
+		for (int x = 0; x < wi.getWidth(); x++) {
+			for (int y = 0; y < wi.getHeight(); y++) {
+				pw.setColor(x, y, Color.TRANSPARENT);
+			}
+		}
 		for (ImageElement imageElement : imageElements) {
 			PixelReader pr = imageElement.image.getPixelReader();
 			for (int i = 0; i < imageElement.w; i++) {
