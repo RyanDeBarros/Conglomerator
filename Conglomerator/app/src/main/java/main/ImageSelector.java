@@ -26,6 +26,7 @@ public class ImageSelector extends Parent {
 	private final Button cancelButton = new Button("Remove");
 
 	private final Text valid = new Text("\u2714"), invalid = new Text("\u2717");
+	private File openAt = new File(STARTING_DIRECTORY.getAbsolutePath());
 
 	public ImageSelector(Stage stage, App app, double width, double height, Color c) throws IOException {
 		super();
@@ -52,14 +53,14 @@ public class ImageSelector extends Parent {
 		y.setLayoutY(height * 0.5);
 		y.setEditable(true);
 
-		fileChooser.setInitialDirectory(STARTING_DIRECTORY);
 		fileChooserBtn.setOnAction(a -> {
+			fileChooser.setInitialDirectory(openAt);
 			File select = fileChooser.showOpenDialog(stage);
 			if (select != null) {
 				imageFile = select;
 				fileName.setText(imageFile.getParentFile().getParentFile().getName() + "/" + imageFile.getParentFile().getName() + "/" + imageFile.getName());
-//				fileChooser.setInitialFileName(imageFile.getAbsolutePath());
-				fileChooser.setInitialFileName(imageFile.getParent());
+				fileChooser.setInitialFileName(imageFile.getAbsolutePath());
+				openAt = imageFile.getParentFile();
 			}
 			valid.setVisible(valid());
 			invalid.setVisible(!valid());
