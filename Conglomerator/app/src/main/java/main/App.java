@@ -1,5 +1,6 @@
 package main;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.application.Application;
@@ -12,6 +13,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -20,7 +22,8 @@ public class App extends Application {
 	private final Pane root = new Pane();
 	private final Pane scroll = new Pane();
 	private final ScrollPane scrP = new ScrollPane(scroll);
-	private int y = 0;
+	public static File STARTING_DIRECTORY;
+	private int selectorHeight;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -33,23 +36,41 @@ public class App extends Application {
 		scrP.setPrefSize(500, 600);
 		scrP.setLayoutX(100);
 		Button b = new Button("Add image");
-		b.setOnAction(a -> addSelector(500, 80, Color.SILVER));
+		selectorHeight = 80;
+		b.setOnAction(a -> addSelector(stage, 500, Color.SILVER));
 		b.setPrefSize(80, 50);
 		b.setLayoutX(10);
 		b.setLayoutY(10);
 		root.getChildren().add(b);
+		STARTING_DIRECTORY = (new DirectoryChooser()).showDialog(stage);
 
 		stage.setScene(new Scene(root));
 		stage.setTitle("Conglomerator");
 		stage.show();
 	}
 
-	private void addSelector(double width, double height, Color c) {
-		ImageSelector selector = new ImageSelector(width, height, c);
-		scroll.getChildren().add(selector);
-		selector.setLayoutY(y);
-		y += height + 10;
-		selectors.add(selector);
+	private void addSelector(Stage stage, double width, Color c) {
+		try {
+			ImageSelector selector = new ImageSelector(stage, this, width, selectorHeight, c);
+			scroll.getChildren().add(selector);
+			selector.setLayoutY(selectors.size() * (selectorHeight + 10));
+			selectors.add(selector);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public void removeSelector(ImageSelector selector) {
+		int n = selectors.indexOf(selector);
+		selectors.remove(selector);
+		scroll.getChildren().remove(selector);
+		positionSelectors(n);
+	}
+
+	private void positionSelectors(int n) {
+		for (int i = n; i < selectors.size(); i++) {
+			selectors.get(i).setLayoutY(i * (selectorHeight + 10));
+		}
 	}
 
 	private static ArrayList<ImageElement> transfer(ArrayList<ImageSelector> selectors) throws IOException {
