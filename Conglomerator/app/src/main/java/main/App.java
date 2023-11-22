@@ -106,8 +106,6 @@ public class App extends Application {
 				element.image = new Image(selector.imageFile.getCanonicalPath());
 				element.x = ImageSelector.valueOf(selector.x);
 				element.y = ImageSelector.valueOf(selector.y);
-				element.w = ImageSelector.valueOf(selector.w);
-				element.h = ImageSelector.valueOf(selector.h);
 				elements.add(element);
 			}
 		}
@@ -124,8 +122,8 @@ public class App extends Application {
 		}
 		for (ImageElement imageElement : imageElements) {
 			PixelReader pr = imageElement.image.getPixelReader();
-			for (int i = 0; i < imageElement.w; i++) {
-				for (int j = 0; j < imageElement.h; j++) {
+			for (int i = 0; i < imageElement.image.getWidth(); i++) {
+				for (int j = 0; j < imageElement.image.getHeight(); j++) {
 					pw.setColor(i + imageElement.x, j + imageElement.y, pr.getColor(i, j));
 				}
 			}
@@ -136,8 +134,8 @@ public class App extends Application {
 	private static int width(ArrayList<ImageElement> imageElements) {
 		int w = 0;
 		for (ImageElement imageElement : imageElements) {
-			if (w < imageElement.w + imageElement.x) {
-				w = imageElement.w + imageElement.x;
+			if (w < imageElement.image.getWidth() + imageElement.x) {
+				w = (int) imageElement.image.getWidth() + imageElement.x;
 			}
 		}
 		return w;
@@ -146,8 +144,8 @@ public class App extends Application {
 	private static int height(ArrayList<ImageElement> imageElements) {
 		int h = 0;
 		for (ImageElement imageElement : imageElements) {
-			if (h < imageElement.h + imageElement.y) {
-				h = imageElement.h + imageElement.y;
+			if (h < imageElement.image.getHeight() + imageElement.y) {
+				h = (int) imageElement.image.getHeight() + imageElement.y;
 			}
 		}
 		return h;

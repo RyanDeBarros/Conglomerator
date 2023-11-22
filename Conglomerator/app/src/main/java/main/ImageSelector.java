@@ -22,8 +22,7 @@ public class ImageSelector extends Parent {
 	private final Button fileChooserBtn = new Button("Open image");
 	private final Text fileName = new Text("...");
 	public File imageFile;
-	public final TextField x = new TextField(), y = new TextField(), w = new TextField(), h = new TextField();
-	private final TextField fields[] = {x, y, w, h};
+	public final TextField x = new TextField(), y = new TextField();
 	private final Button cancelButton = new Button("Remove");
 
 	private final Text valid = new Text("\u2714"), invalid = new Text("\u2717");
@@ -33,8 +32,7 @@ public class ImageSelector extends Parent {
 		bkg = new Rectangle(width, height, c);
 		bkg.setStroke(Color.BLACK);
 		bkg.setStrokeType(StrokeType.INSIDE);
-		getChildren().addAll(bkg, fileChooserBtn, fileName, cancelButton);
-		getChildren().addAll(fields);
+		getChildren().addAll(bkg, fileChooserBtn, fileName, cancelButton, x, y);
 
 		fileChooserBtn.setLayoutY(height * 0.05);
 		fileChooserBtn.setLayoutX(fileChooserBtn.getLayoutY());
@@ -43,19 +41,16 @@ public class ImageSelector extends Parent {
 		fileName.setFont(Font.font("Times New Roman", 16));
 		fileName.setLayoutY(fileChooserBtn.getLayoutY());
 		fileName.setLayoutX(fileChooserBtn.getLayoutX() + 0.23 * width);
-		x.setLayoutX(width * 0.2);
-		y.setLayoutX(width * 0.4);
-		w.setLayoutX(width * 0.6);
-		h.setLayoutX(width * 0.8);
+		x.setLayoutX(width * 0.6);
+		y.setLayoutX(width * 0.8);
 		x.setPromptText("X pos");
 		y.setPromptText("Y pos");
-		w.setPromptText("Width");
-		h.setPromptText("Height");
-		for (TextField field : fields) {
-			field.setPrefSize(width * 0.15, height * 0.3);
-			field.setLayoutY(height * 0.5);
-			field.setEditable(true);
-		}
+		x.setPrefSize(width * 0.15, height * 0.3);
+		x.setLayoutY(height * 0.5);
+		x.setEditable(true);
+		y.setPrefSize(width * 0.15, height * 0.3);
+		y.setLayoutY(height * 0.5);
+		y.setEditable(true);
 
 		fileChooser.setInitialDirectory(STARTING_DIRECTORY);
 		fileChooserBtn.setOnAction(a -> {
@@ -86,24 +81,22 @@ public class ImageSelector extends Parent {
 		invalid.setFont(Font.font(20));
 		valid.setVisible(false);
 
-		for (TextField field : fields) {
-			field.textProperty().addListener(l -> {
-				valid.setVisible(valid());
-				invalid.setVisible(!valid());
-			});
-		}
+		x.textProperty().addListener(l -> {
+			valid.setVisible(valid());
+			invalid.setVisible(!valid());
+		});
+		y.textProperty().addListener(l -> {
+			valid.setVisible(valid());
+			invalid.setVisible(!valid());
+		});
 	}
 
 	public boolean valid() {
 		return imageFile != null
 				&& !x.getText().isEmpty()
 				&& !y.getText().isEmpty()
-				&& !w.getText().isEmpty()
-				&& !h.getText().isEmpty()
 				&& valueOf(x) >= 0
-				&& valueOf(y) >= 0
-				&& valueOf(w) >= 0
-				&& valueOf(h) >= 0;
+				&& valueOf(y) >= 0;
 	}
 
 	public static int valueOf(TextField field) {
